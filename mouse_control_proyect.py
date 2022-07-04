@@ -1,5 +1,6 @@
 from email.mime import image
 from turtle import shape
+from unittest import result
 import cv2
 import mediapipe as mp
 
@@ -20,7 +21,7 @@ MIN_TRACKING_CONFIDENCE: Valor mínimo de confianza del modelo de rastreo de los
 #explorar las opciones de ejecución
 with mp_hands.Hands(
     static_image_mode=True,
-    max_num_hands=1,
+    max_num_hands=2,
     min_detection_confidence=0.5) as hands:
     #Leeremos la imagen con opencv
     image=cv2.imread("mostrando_manos.jpg")
@@ -28,11 +29,21 @@ with mp_hands.Hands(
     #volteamos horizontalmente para que se pueda identificar la mano izquierda y la derecha(como un reflejo)
     image=cv2.flip(image,1)
 
+    #Pasaremos la imagen de entrada de brg a rgb para la detección de imágenes
+    image_rgb=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    results=hands.process(image_rgb)# Obtenemos 2 salidas multihandlnest y multihandlmarks
+
+    #HANDEDNESS
+    print("Handedness: ",results.multi_handedness)#imprimimos lo que se tiene en multi_handedness
+    """
+    score=Que tan bien esta identificada la mano
+    Label=Etiqueta que nos dirá si se tiene una Mano izquierda o derecha
+    """
+
     #volteamos nuevamente para dejarla con la orientación horiginal
     image=cv2.flip(image,1)
-
     #Visualizar la imagen
-    cv2.imshow("Image",image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    
+cv2.imshow("Image",image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
