@@ -21,7 +21,7 @@ MIN_TRACKING_CONFIDENCE: Valor mínimo de confianza del modelo de rastreo de los
 #explorar las opciones de ejecución
 with mp_hands.Hands(
     static_image_mode=True,
-    max_num_hands=2,
+    max_num_hands=2,# Aqui es donde definimos cuántas manos detectar
     min_detection_confidence=0.5) as hands:
     #Leeremos la imagen con opencv
     image=cv2.imread("mostrando_manos.jpg")
@@ -31,14 +31,23 @@ with mp_hands.Hands(
 
     #Pasaremos la imagen de entrada de brg a rgb para la detección de imágenes
     image_rgb=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
-    results=hands.process(image_rgb)# Obtenemos 2 salidas multihandlnest y multihandlmarks
+    results=hands.process(image_rgb)# Obtenemos 2 salidas multi HANDEDNESS y multi HAND LANDMARKS
 
     #HANDEDNESS
-    print("Handedness: ",results.multi_handedness)#imprimimos lo que se tiene en multi_handedness
+    # print("Handedness: ",results.multi_handedness)#imprimimos lo que se tiene en multi_handedness
     """
-    score=Que tan bien esta identificada la mano
-    Label=Etiqueta que nos dirá si se tiene una Mano izquierda o derecha
+    index:
+    score: Que tan bien esta identificada la mano
+    Label: Etiqueta que nos dirá si se tiene una Mano izquierda o derecha
     """
+
+    #HAND LANDMARKS
+    """
+    Coleccion de manos rastreadas y/o detectadas, donde cada mano esta 
+    representada por una lista de 21 puntos. Donde cada punto esta com-
+    puesto por x,y,z que contienen decimales.
+    """
+    print("Hand landmarks: ",results.multi_hand_landmarks)
 
     #volteamos nuevamente para dejarla con la orientación horiginal
     image=cv2.flip(image,1)
