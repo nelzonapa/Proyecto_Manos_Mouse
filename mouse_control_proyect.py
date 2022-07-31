@@ -58,20 +58,20 @@ with mp_hands.Hands(
         """
         Recorreremos los 21 puntos por cada mano detectada
         """
-        for hand_landmarks in results.multi_hand_landmarks:
+        #for hand_landmarks in results.multi_hand_landmarks:
             #print(hand_landmarks)# imprime 21 puntos por cada mano
-            """
+        """
             Dibujando los 21 puntos de los hand_landmarks con ayuda de mediapipe
             """
-            mp_drawing.draw_landmarks(image,hand_landmarks,mp_hands.HAND_CONNECTIONS)
-            """
+            #mp_drawing.draw_landmarks(image,hand_landmarks,mp_hands.HAND_CONNECTIONS)
+        """
             Ya se específicó la imagen que se tiene en la variable "imagen" donde se 
             dibujará los 21 puntos de cada mano. Incluso uno puede usar :
             multi HANDEDNESS y multi HAND LANDMARKS para adquirir información de puntos o 
             qué manos se estan detectando en la imagen.
             OJO los colores fueron establecidos automáticamente
             """
-            """
+        """
             EN EL CASO DE QUERER CAMBIAR EL COLOR:
             mp_drawing.draw_landmarks(
                 image,hand_landmarks,mp_hands.HAND_CONNECTIONS,
@@ -79,7 +79,31 @@ with mp_hands.Hands(
                 mp_drawing.DrawingSpec(color=(255,0,255),thickness=4))
             """
         #---------------------------------------------------------------
+        #---------------------------------------------------------------
+        """
+        Accediendo a los puntos clave(hand landmarks) de acuerdo a su nombre, el cual esta establecido
+        por mediapipe: 
+        Pulgar-> THUMB_TIP 
+        Índice-> INDEX_FINGER_TIP
+        Medio-> MIDDLE_FINGER_TIP
+        Anular-> RING_FINGER_TIP
+        Meñique-> PINKY_TIP
+        """
+        for hand_landmarks in results.multi_hand_landmarks:
+            x1=int(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].x*width)
+            """
+            Se Accedió a la coordenada "x" del o de los pulgares
+            Se debe multiplicar el valor de la coordenada x del o los pulgares por el ancho de la imagen
+            para obtener un numero más grande. Finalmente obtenemos su valor sin decimales con int()
 
+            """
+            #Para la coordenada y, lo mismo, solo que multiplicado por el alto de la imagen
+            y1=int(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y*height)
+            print(x1,y1)
+
+            #PROBAMOS las coordenadas obtenidas, dibujando un circulo en las coordenadas
+            cv2.circle(image,(x1,y1),3,(255,0,0),3)
+             
     #volteamos nuevamente para dejarla con la orientación horiginal
     image=cv2.flip(image,1)
     #Visualizar la imagen
