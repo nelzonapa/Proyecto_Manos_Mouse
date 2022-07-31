@@ -99,11 +99,32 @@ with mp_hands.Hands(
             """
             #Para la coordenada y, lo mismo, solo que multiplicado por el alto de la imagen
             y1=int(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y*height)
-            print(x1,y1)
+            #print(x1,y1) #mostramos coordenadas del punto 1 en la terminal
 
             #PROBAMOS las coordenadas obtenidas, dibujando un circulo en las coordenadas
             cv2.circle(image,(x1,y1),3,(255,0,0),3)
-             
+
+            """
+            Ubicando los demás puntos:
+            """
+            x2=int(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x*width)
+            y2=int(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y*height)
+
+            x3=int(hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x*width)
+            y3=int(hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y*height)
+
+            x4=int(hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].x*width)
+            y4=int(hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].y*height)
+            
+            x5=int(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].x*width)
+            y5=int(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y*height)
+
+            cv2.circle(image,(x2,y2),3,(255,0,0),3)
+            cv2.circle(image,(x3,y3),3,(255,0,0),3)
+            cv2.circle(image,(x4,y4),3,(255,0,0),3)
+            cv2.circle(image,(x5,y5),3,(255,0,0),3)
+        #---------------------------------------------------------------
+    
     #volteamos nuevamente para dejarla con la orientación horiginal
     image=cv2.flip(image,1)
     #Visualizar la imagen
