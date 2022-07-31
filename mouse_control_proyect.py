@@ -45,9 +45,40 @@ with mp_hands.Hands(
     """
     Coleccion de manos rastreadas y/o detectadas, donde cada mano esta 
     representada por una lista de 21 puntos. Donde cada punto esta com-
-    puesto por x,y,z que contienen decimales.
+    puesto por x,y,z que contienen decimales (coordenadas de la imagen).
     """
-    print("Hand landmarks: ",results.multi_hand_landmarks)
+    #print("Hand landmarks: ",results.multi_hand_landmarks)
+
+    """
+    Para el caso en que no se encuentre alguna mano
+    """
+    if results.multi_hand_landmarks is not None:# en el caso de encontrar una mano
+        #------------------------------------------------------------------
+        #Dibujando los puntos y sus conexiones con mediapipe (leida de todos los puntos)
+        """
+        Recorreremos los 21 puntos por cada mano detectada
+        """
+        for hand_landmarks in results.multi_hand_landmarks:
+            #print(hand_landmarks)# imprime 21 puntos por cada mano
+            """
+            Dibujando los 21 puntos de los hand_landmarks con ayuda de mediapipe
+            """
+            mp_drawing.draw_landmarks(image,hand_landmarks,mp_hands.HAND_CONNECTIONS)
+            """
+            Ya se específicó la imagen que se tiene en la variable "imagen" donde se 
+            dibujará los 21 puntos de cada mano. Incluso uno puede usar :
+            multi HANDEDNESS y multi HAND LANDMARKS para adquirir información de puntos o 
+            qué manos se estan detectando en la imagen.
+            OJO los colores fueron establecidos automáticamente
+            """
+            """
+            EN EL CASO DE QUERER CAMBIAR EL COLOR:
+            mp_drawing.draw_landmarks(
+                image,hand_landmarks,mp_hands.HAND_CONNECTIONS,
+                mp_drawing.DrawingSpec(color=(255,255,0),thickness=4,circle_radius=5).
+                mp_drawing.DrawingSpec(color=(255,0,255),thickness=4))
+            """
+        #---------------------------------------------------------------
 
     #volteamos nuevamente para dejarla con la orientación horiginal
     image=cv2.flip(image,1)
