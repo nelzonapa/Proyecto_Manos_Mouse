@@ -13,6 +13,14 @@ cap=cv2.VideoCapture(0,cv2.CAP_DSHOW)
 #Definimos el color_mouse_pointer:
 color_mouse_pointer=(255,255,0)
 
+"""Puntos de la pantalla"""
+SCREEN_X_INI=0
+SCREEN_Y_INI=0
+#puntosfinales se agrega las medidas puestas en area_screenshot.py
+SCREEN_X_FIN=0+1920
+SCREEN_Y_FIN=0+1080
+
+
 with mp_hands.Hands(
     static_image_mode=False,
     max_num_hands=1,# Cambiamos a 1, porque para el mouse solo necesitamos una
