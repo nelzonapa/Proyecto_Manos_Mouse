@@ -10,9 +10,12 @@ mp_hands=mp.solutions.hands
 #Especial para vídeo, importante, para usar en este caso la WebCam:
 cap=cv2.VideoCapture(0,cv2.CAP_DSHOW)
 
+#Definimos el color_mouse_pointer:
+color_mouse_pointer=(255,255,0)
+
 with mp_hands.Hands(
     static_image_mode=False,
-    max_num_hands=2,# Aqui es donde definimos cuántas manos detectar
+    max_num_hands=1,# Cambiamos a 1, porque para el mouse solo necesitamos una
     min_detection_confidence=0.5) as hands:#0.5 por defecto
 
     while True:
@@ -32,14 +35,19 @@ with mp_hands.Hands(
         Para el caso en que no se encuentre alguna mano
         """
         if results.multi_hand_landmarks is not None:# en el caso de encontrar una mano
-            for hand_landmarks in results.multi_hand_landmarks:#Para obtener los 21 puntos por mano detectada
-                mp_drawing.draw_landmarks(frame,hand_landmarks,mp_hands.HAND_CONNECTIONS)
+            for hand_landmarks in results.multi_hand_landmarks:
+                #MediaPipeHands: https://google.github.io/mediapipe/solutions/hands
                 """
-                (draw_landmarks) de mediapipe, dibuja los puntos y sus conexiones
+                No necesitaremos mostrar todos los puntos y líneas, solo accedremos al punto 9
                 """
-                """
-                Después de lo anterior ya puedes experimentar con lo aprendido en la leída de manos mediante imagen
-                """
+                #coordenadas x y y del punto, accediendo
+                x=int(hand_landmarks.landmark[9].x*width)
+                y=int(hand_landmarks.landmark[9].y*height)
+
+                #Introducimos el circulo que dibujaremos
+                cv2.circle(frame,(x,y),10,color_mouse_pointer,3)# el color_mouse_pointer, esta definido en la parte superior
+                cv2.circle(frame,(x,y),10,color_mouse_pointer,-1)# el color_mouse_pointer, esta definido en la parte superior
+
         cv2.imshow("Frame",frame)
         if cv2.waitKey(1) & 0xFF==27:
             break
