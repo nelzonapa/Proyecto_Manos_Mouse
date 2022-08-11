@@ -82,6 +82,19 @@ with mp_hands.Hands(
                 x=int(hand_landmarks.landmark[9].x*width)
                 y=int(hand_landmarks.landmark[9].y*height)
 
+                """
+                En esta parte se esta implementando lo que se necesita para dar movimiento al mouse
+                - x,(X_Y_INI,X_Y_INI+area_width) indica en si las coordenadas, la seccion que se dibujo para la pantalla del streaming
+                - (SCREEN_X_INI,SCREEN_X_FIN) es la ubicación en sí de la pantalla
+                """
+                #Usando Interpolación lineal(.interp()):
+                #coordenadas x e y
+                xm=np.interp(x,(X_Y_INI,X_Y_INI+area_width),(SCREEN_X_INI,SCREEN_X_FIN))
+                ym=np.interp(y,(X_Y_INI,X_Y_INI+area_height),(SCREEN_Y_INI,SCREEN_Y_FIN))
+                #ya se tiene las coordenadas para poder mover el mouse.
+                pyautogui.moveTo(int(xm),int(ym))
+
+
                 #Introducimos el circulo que dibujaremos
                 #Cambiamos de frame a output
                 cv2.circle(output,(x,y),10,color_mouse_pointer,3)# el color_mouse_pointer, esta definido en la parte superior
