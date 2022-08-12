@@ -33,6 +33,55 @@ print("aspect_ratio_screen: ",aspect_ratio_screen) #imprimimos aspect radio
 
 X_Y_INI=100 #Con esto indicamos los 100 pixeles que se tendrá en el eje Y y X, para el lado izquierdo y derecho de la pantalla
 
+#Función nueva para calcular distancia entre puntos:
+def calcular_distancia(x1,y1,x2,y2):
+    punto1=np.array([x1,y1])
+    punto2=np.array([x2,y2])
+
+    return np.linalg.norm(punto1-punto2) #operación
+
+
+#Creamos la función que usaremos para la detección del dedo que hará click
+def detect_finger_down(hand_landmarks):
+    finger_down=False #En un principio será false
+    #Ahora definiremos los colores para la distancia base(palma) y distancia thumb(dedo pulgar)
+    color_base=(255,255,0)
+    color_thumb=(255,0,0)
+    #obtenemos los puntos claves:
+    #- para la palma:
+    x_base_1=int(hand_landmarks.landmark[0].x*width)#landmark[i] depende de los puntos de la muñeca que define mediapipeHands
+    y_base_1=int(hand_landmarks.landmark[0].y*height)
+
+    #- para la el otro punto de la palma:
+    x_base_2=int(hand_landmarks.landmark[9].x*width)
+    y_base_2=int(hand_landmarks.landmark[9].y*height)
+
+    #Para el dedo indice:
+    x_thumb=int(hand_landmarks.landmark[4].x*width)#landmark[i] depende de los puntos de la muñeca que define mediapipeHands
+    y_thumb=int(hand_landmarks.landmark[4].y*height)
+
+    """Se debe de hallar la distancia entre los puntos anteriores (base_1 con base_2) y (base_1 e thumb)
+    Para ello, vamos a crear una función aparte llamada (calcular_distancia)"""
+    distancia_base=calcular_distancia(x_base_1,y_base_1,x_base_2,y_base_2)
+    distancia_indice=calcular_distancia(x_base_1,y_base_1,x_thumb,y_thumb)
+    
+    #condicion
+    if distancia_indice<distancia_base:
+        finger_down=True
+        #cambiamos de color a las lineas
+        color_base=(0,255,255)
+        color_thumb=(0,255,255)
+
+    #Ahora tendremos que visualizar los cuirculos y las respectivas líneas
+    cv2.circle(output,(x_base_1,y_base_1),5,color_base,2)
+    cv2.circle(output,(x_thumb,y_thumb),5,color_thumb,2)
+    cv2.line(output,(x_base_1,y_base_1),(x_base_2,y_base_2),color_base,3)
+    cv2.line(output,(x_base_1,y_base_1),(x_thumb,y_thumb),color_thumb,3)
+
+    #finalmente:
+    return finger_down
+
+
 with mp_hands.Hands(
     static_image_mode=False,
     max_num_hands=1,# Cambiamos a 1, porque para el mouse solo necesitamos una
@@ -92,7 +141,12 @@ with mp_hands.Hands(
                 xm=np.interp(x,(X_Y_INI,X_Y_INI+area_width),(SCREEN_X_INI,SCREEN_X_FIN))
                 ym=np.interp(y,(X_Y_INI,X_Y_INI+area_height),(SCREEN_Y_INI,SCREEN_Y_FIN))
                 #ya se tiene las coordenadas para poder mover el mouse.
-                pyautogui.moveTo(int(xm),int(ym))
+
+                #Función que usaremos para la detección
+                detect_finger_down(hand_landmarks)
+
+
+                pyautogui.moveTo(int(xm),int(ym))#para movimiento
 
 
                 #Introducimos el circulo que dibujaremos
