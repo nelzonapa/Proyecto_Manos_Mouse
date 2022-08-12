@@ -53,8 +53,8 @@ def detect_finger_down(hand_landmarks):
     y_base_1=int(hand_landmarks.landmark[0].y*height)
 
     #- para la el otro punto de la palma:
-    x_base_2=int(hand_landmarks.landmark[9].x*width)
-    y_base_2=int(hand_landmarks.landmark[9].y*height)
+    x_base_2=int(hand_landmarks.landmark[5].x*width)
+    y_base_2=int(hand_landmarks.landmark[5].y*height)
 
     #Para el dedo indice:
     x_thumb=int(hand_landmarks.landmark[4].x*width)#landmark[i] depende de los puntos de la muñeca que define mediapipeHands
@@ -128,8 +128,8 @@ with mp_hands.Hands(
                 No necesitaremos mostrar todos los puntos y líneas, solo accedremos al punto 9
                 """
                 #coordenadas x y y del punto, accediendo
-                x=int(hand_landmarks.landmark[9].x*width)
-                y=int(hand_landmarks.landmark[9].y*height)
+                x=int(hand_landmarks.landmark[5].x*width)
+                y=int(hand_landmarks.landmark[5].y*height)
 
                 """
                 En esta parte se esta implementando lo que se necesita para dar movimiento al mouse
