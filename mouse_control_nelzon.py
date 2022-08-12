@@ -53,12 +53,12 @@ def detect_finger_down(hand_landmarks):
     y_base_1=int(hand_landmarks.landmark[0].y*height)
 
     #- para la el otro punto de la palma:
-    x_base_2=int(hand_landmarks.landmark[5].x*width)
-    y_base_2=int(hand_landmarks.landmark[5].y*height)
+    x_base_2=int(hand_landmarks.landmark[9].x*width)
+    y_base_2=int(hand_landmarks.landmark[9].y*height)
 
     #Para el dedo indice:
-    x_thumb=int(hand_landmarks.landmark[4].x*width)#landmark[i] depende de los puntos de la muñeca que define mediapipeHands
-    y_thumb=int(hand_landmarks.landmark[4].y*height)
+    x_thumb=int(hand_landmarks.landmark[8].x*width)#landmark[i] depende de los puntos de la muñeca que define mediapipeHands
+    y_thumb=int(hand_landmarks.landmark[8].y*height)
 
     """Se debe de hallar la distancia entre los puntos anteriores (base_1 con base_2) y (base_1 e thumb)
     Para ello, vamos a crear una función aparte llamada (calcular_distancia)"""
@@ -128,8 +128,8 @@ with mp_hands.Hands(
                 No necesitaremos mostrar todos los puntos y líneas, solo accedremos al punto 9
                 """
                 #coordenadas x y y del punto, accediendo
-                x=int(hand_landmarks.landmark[5].x*width)
-                y=int(hand_landmarks.landmark[5].y*height)
+                x=int(hand_landmarks.landmark[9].x*width)
+                y=int(hand_landmarks.landmark[9].y*height)
 
                 """
                 En esta parte se esta implementando lo que se necesita para dar movimiento al mouse
@@ -142,11 +142,12 @@ with mp_hands.Hands(
                 ym=np.interp(y,(X_Y_INI,X_Y_INI+area_height),(SCREEN_Y_INI,SCREEN_Y_FIN))
                 #ya se tiene las coordenadas para poder mover el mouse.
 
-                #Función que usaremos para la detección
-                detect_finger_down(hand_landmarks)
-
-
                 pyautogui.moveTo(int(xm),int(ym))#para movimiento
+                
+                """Pondremos la acción de click del mouse"""
+                #Función que usaremos para la detección
+                if detect_finger_down(hand_landmarks):
+                    pyautogui.click()
 
 
                 #Introducimos el circulo que dibujaremos
@@ -154,7 +155,7 @@ with mp_hands.Hands(
                 cv2.circle(output,(x,y),10,color_mouse_pointer,3)# el color_mouse_pointer, esta definido en la parte superior
                 cv2.circle(output,(x,y),10,color_mouse_pointer,-1)# el color_mouse_pointer, esta definido en la parte superior
 
-        cv2.imshow("Frame",frame)
+        # cv2.imshow("Frame",frame) #podemos desactivar el frame
 
         #imagen del output
         cv2.imshow("output",output)
